@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Darsh Nandu — AI/ML Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=JetBrains+Mono:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ============ TOKENS ============ */
+  :root{
+    --bg:        #F3EFFD;
+    --ink:       #1B1B2F;
+    --accent:    #6C4CFF;
+    --highlight: #FFC857;
+    --add:       #1F9D55;
+    --add-bg:    rgba(31,157,85,.09);
+    --rem:       #E5484D;
+    --rem-bg:    rgba(229,72,77,.08);
+    --surface:   #FFFFFF;
+    --muted:     #6E6A86;
+    --border:    rgba(27,27,47,.10);
+
+    --font-display: 'Bricolage Grotesque', sans-serif;
+    --font-body:    'Manrope', sans-serif;
+    --font-mono:    'JetBrains Mono', monospace;
+
+    --container: 920px;
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+
+  html{ scroll-behavior:smooth; scroll-padding-top: 84px; }
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+  }
+
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--font-body);
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    cursor: none;
+  }
+
+  a, button, [role="button"], input, textarea, select, label { cursor: none !important; }
+
+  a{ color:inherit; }
+
+  .container{
+    max-width:var(--container);
+    margin:0 auto;
+    padding:0 24px;
+  }
+
+  :focus-visible{
+    outline:2px solid var(--accent);
+    outline-offset:3px;
+    border-radius:4px;
+  }
+
+  /* ============ BOOT OVERLAY ============ */
+  #boot{
+    position:fixed; inset:0; z-index:999;
+    background:var(--ink); color:#E9E6FF;
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-mono); font-size:14px; letter-spacing:.02em;
+    transition:opacity .35s ease, visibility .35s ease;
+  }
+  #boot.hidden{ opacity:0; visibility:hidden; pointer-events:none; }
+  #boot .boot-line{ opacity:0; }
+  #boot .boot-line.show{ opacity:1; transition:opacity .15s ease; }
+  #boot .boot-ok{ color:var(--add); }
+  @media (prefers-reduced-motion: reduce){
+    #boot{ display:none; }
+  }
+
+  /* ============ TAB BAR ============ */
+  .tabbar{
+    position:sticky; top:0; z-index:50;
+    background:var(--surface);
+    border-bottom:1px solid var(--border);
+    overflow-x:auto;
+    -ms-overflow-style:none; scrollbar-width:none;
+  }
+  .tabbar::-webkit-scrollbar{ display:none; }
+  .tabbar-inner{
+    display:flex; min-width:max-content;
+  }
+  .tab{
+    display:flex; align-items:center; gap:8px;
+    padding:14px 20px;
+    font-family:var(--font-mono); font-size:13px; font-weight:500;
+    color:var(--muted);
+    background:none; border:none; cursor:pointer;
+    border-bottom:2px solid transparent;
+    white-space:nowrap;
+    transition:color .15s ease, border-color .15s ease, background .15s ease;
+  }
+  .tab:hover{ color:var(--ink); background:rgba(108,76,255,.05); }
+  .tab.active{
+    color:var(--ink);
+    border-bottom-color:var(--dot, var(--accent));
+    background:rgba(108,76,255,.05);
+  }
+  .tab-dot{
+    width:8px; height:8px; border-radius:2px;
+    background:var(--dot, var(--accent));
+    flex-shrink:0;
+  }
+
+  /* ============ STATUS BAR ============ */
+  .statusbar{
+    display:flex; align-items:center; gap:18px;
+    padding:8px 24px;
+    font-family:var(--font-mono); font-size:12px;
+    color:var(--muted);
+    border-bottom:1px solid var(--border);
+    overflow-x:auto;
+    -ms-overflow-style:none; scrollbar-width:none;
+  }
+  .statusbar::-webkit-scrollbar{ display:none; }
+  .status-item{ display:flex; align-items:center; gap:6px; white-space:nowrap; }
+  .status-right{ margin-left:auto; }
+  .status-dot{
+    width:8px; height:8px; border-radius:50%;
+    background:var(--add);
+    display:inline-block;
+    animation:pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{ opacity:1; } 50%{ opacity:.35; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .status-dot{ animation:none; }
+  }
+  .version-pill{
+    font-weight:700; color:var(--accent);
+    background:rgba(108,76,255,.10);
+    padding:2px 8px; border-radius:4px;
+  }
+  @media (max-width:640px){
+    .status-hide-sm{ display:none; }
+  }
+
+  /* ============ PATH LABEL / SECTION TITLE ============ */
+  .path-label{
+    font-family:var(--font-mono); font-size:13px; color:var(--accent);
+    font-weight:600; letter-spacing:.02em; margin-bottom:10px;
+  }
+  .section-title{
+    font-family:var(--font-display);
+    font-weight:800;
+    font-size:clamp(2rem, 5vw, 3.25rem);
+    line-height:1.1;
+    letter-spacing:-0.01em;
+    margin-bottom:16px;
+  }
+  .section{ padding:88px 0; }
+  .section-intro{
+    color:var(--muted); font-size:1.05rem; max-width:580px; margin-bottom:48px;
+  }
+
+  /* ============ HERO ============ */
+  .hero{ padding:64px 0 80px; }
+  .diff-block{
+    background:var(--ink);
+    border-radius:10px;
+    overflow:hidden;
+    font-family:var(--font-mono);
+    font-size:clamp(.85rem, 2vw, 1.05rem);
+    line-height:1.95;
+    box-shadow:0 24px 60px -24px rgba(27,27,47,.35);
+  }
+  .diff-line{
+    display:flex;
+    padding:0 20px;
+  }
+  .diff-line .ln{
+    width:2.4em; flex-shrink:0;
+    color:rgba(255,255,255,.25);
+    text-align:right; margin-right:1.2em;
+    user-select:none;
+  }
+  .diff-line .marker{
+    width:1.2em; flex-shrink:0;
+    font-weight:700;
+    user-select:none;
+  }
+  .diff-line .code{ color:#E9E6FF; }
+  .diff-line.rm{ background:rgba(229,72,77,.12); }
+  .diff-line.rm .marker, .diff-line.rm .code{ color:#FF9B9E; }
+  .diff-line.rm .code{ text-decoration:none; opacity:.85; }
+  .diff-line.add{ background:rgba(31,157,85,.14); }
+  .diff-line.add .marker{ color:#5FE3A1; }
+  .diff-line.add .code{ color:#EAFBF1; }
+  .diff-line.add strong{ color:var(--highlight); font-weight:700; }
+
+  .cta-row{
+    display:flex; gap:14px; margin-top:36px; flex-wrap:wrap;
+  }
+  .cmd-btn{
+    font-family:var(--font-mono); font-size:.9rem; font-weight:600;
+    padding:13px 22px;
+    border-radius:8px;
+    border:1.5px solid var(--ink);
+    background:var(--ink); color:var(--bg);
+    cursor:pointer;
+    transition:transform .15s ease, background .15s ease, color .15s ease;
+  }
+  .cmd-btn:hover{ transform:translateY(-2px); }
+  .cmd-btn--ghost{
+    background:transparent; color:var(--ink);
+    border-color:var(--border);
+  }
+  .cmd-btn--ghost:hover{ border-color:var(--ink); }
+
+  /* ============ CHANGELOG / PROJECTS ============ */
+  .release{
+    border:1px solid var(--border);
+    border-radius:12px;
+    background:var(--surface);
+    padding:28px 28px 24px;
+    margin-bottom:24px;
+  }
+  .release-head{
+    display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;
+    margin-bottom:10px;
+  }
+  .version-tag{
+    font-family:var(--font-mono); font-size:.8rem; font-weight:700;
+    color:var(--accent);
+    background:rgba(108,76,255,.10);
+    border-radius:5px; padding:3px 9px;
+  }
+  .release-title{
+    font-family:var(--font-display); font-weight:800;
+    font-size:clamp(1.3rem, 3vw, 1.7rem);
+  }
+  .release-date{
+    font-family:var(--font-mono); font-size:.78rem; color:var(--muted);
+    margin-left:auto;
+  }
+  .release-desc{ color:var(--muted); max-width:620px; margin-bottom:18px; }
+
+  .diff-list{ list-style:none; margin-bottom:20px; }
+  .diff-list li{
+    font-family:var(--font-mono); font-size:.85rem;
+    padding:5px 12px 5px 30px;
+    position:relative;
+    border-radius:5px;
+  }
+  .diff-list li::before{
+    position:absolute; left:10px; font-weight:700;
+  }
+  .diff-list li.add{ background:var(--add-bg); color:#0E5A30; }
+  .diff-list li.add::before{ content:"+"; color:var(--add); }
+  .diff-list li.rem{ background:var(--rem-bg); color:#8A2024; }
+  .diff-list li.rem::before{ content:"–"; color:var(--rem); }
+
+  .release-footer{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:16px; flex-wrap:wrap;
+  }
+  .tags{ display:flex; gap:8px; flex-wrap:wrap; }
+  .tag{
+    font-family:var(--font-mono); font-size:.74rem; font-weight:600;
+    color:var(--muted);
+    border:1px solid var(--border); border-radius:5px;
+    padding:3px 9px;
+  }
+  .cmd-link{
+    font-family:var(--font-mono); font-size:.85rem; font-weight:600;
+    color:var(--ink); text-decoration:none;
+    white-space:nowrap;
+    border-bottom:1.5px solid var(--accent);
+    padding-bottom:2px;
+    transition:color .15s ease;
+  }
+  .cmd-link:hover{ color:var(--accent); }
+
+  /* ============ ABOUT ============ */
+  .about-grid{
+    display:grid; grid-template-columns:1.5fr 1fr; gap:56px;
+    align-items:start;
+  }
+  .about-grid p{ margin-bottom:16px; max-width:540px; }
+  .about-grid p:last-of-type{ margin-bottom:0; }
+  .now-card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:24px 26px;
+  }
+  .now-card .path-label{ margin-bottom:14px; }
+  .now-card ul{ list-style:none; display:flex; flex-direction:column; gap:12px; }
+  .now-card li{ display:flex; gap:10px; font-size:.95rem; }
+  .now-card li::before{ content:"›"; color:var(--accent); font-weight:700; font-family:var(--font-mono); }
+
+  @media (max-width:760px){
+    .about-grid{ grid-template-columns:1fr; gap:32px; }
+  }
+
+  /* ============ DEPENDENCIES (package.json) ============ */
+  .code-block{
+    background:var(--ink);
+    border-radius:10px;
+    padding:28px 28px;
+    font-family:var(--font-mono);
+    font-size:.88rem;
+    line-height:1.85;
+    overflow-x:auto;
+    color:#E9E6FF;
+  }
+  .tok-key{ color:#A7E3FF; }
+  .tok-string{ color:#5FE3A1; }
+  .tok-punc{ color:rgba(255,255,255,.35); }
+  .tok-comment{ color:rgba(255,255,255,.35); font-style:italic; }
+  .tok-dep-rem{ color:#FF9B9E; text-decoration:line-through; opacity:.75; }
+  .indent{ padding-left:1.5em; }
+  .indent2{ padding-left:3em; }
+
+  /* ============ CONTACT (terminal) ============ */
+  .terminal{
+    background:var(--ink);
+    border-radius:10px;
+    padding:28px;
+    font-family:var(--font-mono); font-size:.92rem; line-height:1.9;
+    color:#E9E6FF;
+    min-height:240px;
+  }
+  .terminal .prompt{ color:var(--highlight); font-weight:700; }
+  .cursor{
+    display:inline-block; width:.55em; height:1.1em;
+    background:#E9E6FF; vertical-align:-2px; margin-left:2px;
+    animation:blink 1s step-end infinite;
+  }
+  @keyframes blink{ 50%{ opacity:0; } }
+  @media (prefers-reduced-motion: reduce){
+    .cursor{ animation:none; }
+  }
+  .terminal-output{ margin-top:6px; }
+  .out-line{
+    opacity:0; transform:translateY(4px);
+    transition:opacity .35s ease, transform .35s ease;
+    display:flex; gap:14px; padding:3px 0;
+    flex-wrap:wrap;
+  }
+  .out-line.show{ opacity:1; transform:translateY(0); }
+  .out-line .out-key{ color:rgba(255,255,255,.45); width:90px; flex-shrink:0; }
+  .out-line a{ color:#A7E3FF; text-decoration:none; border-bottom:1px solid transparent; }
+  .out-line a:hover{ border-bottom-color:#A7E3FF; }
+  .out-status{ color:var(--add); margin-top:14px; display:block; }
+
+  @media (max-width:480px){
+    .out-line{ flex-direction:column; gap:2px; padding:8px 0; }
+    .out-line .out-key{ width:auto; }
+    .out-status{ margin-top:10px; }
+  }
+
+  /* ============ FOOTER ============ */
+  .footer{
+    padding:40px 0 60px;
+    font-family:var(--font-mono); font-size:.8rem; color:var(--muted);
+    border-top:1px solid var(--border);
+  }
+  .footer .container{
+    display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap;
+  }
+
+  /* ============ SCROLL REVEAL ============ */
+  .reveal{
+    opacity:0; transform:translateY(16px);
+    transition:opacity .5s ease, transform .5s ease;
+  }
+  .reveal.visible{ opacity:1; transform:translateY(0); }
+  @media (prefers-reduced-motion: reduce){
+    .reveal{ opacity:1; transform:none; transition:none; }
+  }
+
+  /* ============ BACKGROUND TEXTURE ============ */
+  body{
+    cursor: none;
+  }
+  body::before{
+    content:'';
+    position:fixed; inset:0; z-index:-2; pointer-events:none;
+    background-image: radial-gradient(circle, rgba(108,76,255,0.13) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+  body::after{
+    content:'';
+    position:fixed; inset:0; z-index:-1; pointer-events:none;
+    background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(108,76,255,0.07) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 30% at 100% 100%, rgba(255,200,87,0.05) 0%, transparent 60%);
+  }
+
+  /* ============ AMBIENT GLOW (follows mouse) ============ */
+  #glow{
+    position:fixed; z-index:-1; pointer-events:none;
+    width:480px; height:480px;
+    border-radius:50%;
+    background: radial-gradient(circle, rgba(108,76,255,0.09) 0%, transparent 70%);
+    transform:translate(-50%,-50%);
+    transition:left .9s cubic-bezier(.22,1,.36,1), top .9s cubic-bezier(.22,1,.36,1);
+    will-change:left,top;
+  }
+
+  /* ============ CUSTOM CURSOR ============ */
+  #cursor-arrow{
+    position:fixed; z-index:9999; pointer-events:none;
+    width:22px; height:22px;
+    will-change:left,top;
+  }
+  #cursor-arrow svg{
+    transition:transform .12s ease;
+  }
+  body.cursor-hover #cursor-arrow svg{
+    transform: scale(1.1);
+  }
+  body.cursor-click #cursor-arrow svg{
+    transform: scale(0.85);
+  }
+
+  /* Hide on touch devices */
+  @media (hover:none){
+    #cursor-arrow, #glow{ display:none; }
+    body{ cursor:auto; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    #cursor-arrow svg{ transition:none; }
+    #glow{ transition:none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- CUSTOM CURSOR -->
+<div id="cursor-arrow">
+  <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M4 2L18 10.5L11.5 12.5L9 19.5L4 2Z" fill="white" stroke="black" stroke-width="1.5" stroke-linejoin="round"/>
+  </svg>
+</div>
+<div id="glow"></div>
+
+<!-- BOOT OVERLAY -->
+<div id="boot">
+  <div>
+    <div class="boot-line" data-line="0">$ npm run build</div>
+    <div class="boot-line" data-line="1">&nbsp;</div>
+    <div class="boot-line" data-line="2"><span class="boot-ok">✓</span> compiled successfully in 312ms</div>
+  </div>
+</div>
+
+<!-- TAB BAR -->
+<nav class="tabbar" aria-label="Section navigation">
+  <div class="tabbar-inner">
+    <button class="tab active" data-target="home" style="--dot:var(--accent)"><span class="tab-dot"></span>home.tsx</button>
+    <button class="tab" data-target="projects" style="--dot:var(--highlight)"><span class="tab-dot"></span>projects.json</button>
+    <button class="tab" data-target="about" style="--dot:#A7B0FF"><span class="tab-dot"></span>about.md</button>
+    <button class="tab" data-target="stack" style="--dot:var(--highlight)"><span class="tab-dot"></span>requirements.txt</button>
+    <button class="tab" data-target="contact" style="--dot:var(--add)"><span class="tab-dot"></span>contact.sh</button>
+  </div>
+</nav>
+
+<!-- STATUS BAR -->
+<div class="statusbar">
+  <span class="status-item"><span aria-hidden="true">⎇</span> main</span>
+  <span class="status-item status-hide-sm"><span class="status-dot" aria-hidden="true"></span> build passing</span>
+  <span class="status-item version-pill">v1.0.0</span>
+  <span class="status-item status-right status-hide-sm"><span id="clock"></span> · Bhilai, IN</span>
+</div>
+
+<!-- HERO -->
+<header class="hero" id="home">
+  <div class="container">
+    <p class="path-label">~/home.tsx</p>
+    <div class="diff-block" role="img" aria-label="A code diff. Removed: generic portfolio intro text. Added: Hi, I'm Darsh Nandu, 2nd year DSAI student at IIT Bhilai, building AI systems and exploring LLM internals.">
+      <div class="diff-line rm"><span class="ln">1</span><span class="marker">−</span><span class="code">Welcome to my portfolio.</span></div>
+      <div class="diff-line rm"><span class="ln">2</span><span class="marker">−</span><span class="code">I'm a passionate, detail-oriented developer</span></div>
+      <div class="diff-line rm"><span class="ln">3</span><span class="marker">−</span><span class="code">who loves clean code and great UX.</span></div>
+      <div class="diff-line add"><span class="ln">1</span><span class="marker">+</span><span class="code">Hey, I'm <strong>Darsh Nandu</strong> — AI/ML engineer.</span></div>
+      <div class="diff-line add"><span class="ln">2</span><span class="marker">+</span><span class="code">2nd year DSAI @ IIT Bhilai. I build agents,</span></div>
+      <div class="diff-line add"><span class="ln">3</span><span class="marker">+</span><span class="code">poke at LLM internals, and ship things to GitHub.</span></div>
+      <div class="diff-line add"><span class="ln">4</span><span class="marker">+</span><span class="code">Currently: mechanistic interpretability + AI systems.</span></div>
+    </div>
+    <div class="cta-row">
+      <button class="cmd-btn" data-target="projects">$ view --projects</button>
+      <button class="cmd-btn cmd-btn--ghost" data-target="contact">$ say --hello</button>
+    </div>
+  </div>
+</header>
+
+<!-- PROJECTS -->
+<section class="section" id="projects">
+  <div class="container">
+    <p class="path-label reveal">~/projects.json</p>
+    <h2 class="section-title reveal">Changelog</h2>
+    <p class="section-intro reveal">A running log of things I've shipped — framed the way I actually think about them: as releases.</p>
+
+    <article class="release reveal">
+      <div class="release-head">
+        <span class="version-tag">agent</span>
+        <h3 class="release-title">Blog-Writing-Agent</h3>
+        <span class="release-date">Python</span>
+      </div>
+      <p class="release-desc">This agent doesn't just "write" — it thinks. Utilizing a multi-step workflow, the agent performs real-time web research, scrapes relevant data, constructs a semantic outline, and drafts high-quality blog posts autonomously.</p>
+      <ul class="diff-list">
+        <li class="add">Added real-time web research and semantic scraping pipeline</li>
+        <li class="add">Added multi-step outline construction before drafting</li>
+        <li class="add">Added autonomous high-quality blog generation workflow</li>
+      </ul>
+      <div class="release-footer">
+        <div class="tags">
+          <span class="tag">Python</span>
+          <span class="tag">Agents</span>
+          <span class="tag">LangChain</span>
+        </div>
+        <a href="https://github.com/Darsh-Nandu/Blog-Writing-Agent" target="_blank" rel="noopener" class="cmd-link">$ open ./blog-writing-agent →</a>
+      </div>
+    </article>
+
+    <article class="release reveal">
+      <div class="release-head">
+        <span class="version-tag">agent</span>
+        <h3 class="release-title">React-Github-Agent</h3>
+        <span class="release-date">Python</span>
+      </div>
+      <p class="release-desc">A production-ready autonomous AI agent powered by LangGraph, FastMCP, and dual-memory to seamlessly manage, develop, and interact with your GitHub repositories.</p>
+      <ul class="diff-list">
+        <li class="add">Added dual-memory architecture for persistent context across sessions</li>
+        <li class="add">Added FastMCP integration for GitHub repository management</li>
+        <li class="add">Added LangGraph-powered autonomous task execution loop</li>
+      </ul>
+      <div class="release-footer">
+        <div class="tags">
+          <span class="tag">Python</span>
+          <span class="tag">LangGraph</span>
+          <span class="tag">FastMCP</span>
+          <span class="tag">Agents</span>
+        </div>
+        <a href="https://github.com/Darsh-Nandu/React-Github-Agent" target="_blank" rel="noopener" class="cmd-link">$ open ./react-github-agent →</a>
+      </div>
+    </article>
+
+    <article class="release reveal">
+      <div class="release-head">
+        <span class="version-tag">infra</span>
+        <h3 class="release-title">ai-failover</h3>
+        <span class="release-date">HTML</span>
+      </div>
+      <p class="release-desc">Demand-aware AI API router that automatically fails over to a backup provider when traffic exceeds a threshold — inspired by Gemini's high-demand behaviour.</p>
+      <ul class="diff-list">
+        <li class="add">Added demand-aware traffic threshold detection</li>
+        <li class="add">Added automatic failover to backup AI provider</li>
+        <li class="add">Added real-time provider health monitoring</li>
+      </ul>
+      <div class="release-footer">
+        <div class="tags">
+          <span class="tag">HTML</span>
+          <span class="tag">AI Infra</span>
+          <span class="tag">API Routing</span>
+        </div>
+        <a href="https://github.com/Darsh-Nandu/ai-failover" target="_blank" rel="noopener" class="cmd-link">$ open ./ai-failover →</a>
+      </div>
+    </article>
+
+    <article class="release reveal">
+      <div class="release-head">
+        <span class="version-tag">systems</span>
+        <h3 class="release-title">AI-System-Design</h3>
+        <span class="release-date">Docs</span>
+      </div>
+      <p class="release-desc">A collection of system design documents for production AI systems — focused on architecture decisions, tradeoffs, and design patterns. No code, just thinking.</p>
+      <ul class="diff-list">
+        <li class="add">Added architecture decision records for production AI systems</li>
+        <li class="add">Added tradeoff analyses and design pattern documentation</li>
+      </ul>
+      <div class="release-footer">
+        <div class="tags">
+          <span class="tag">System Design</span>
+          <span class="tag">Architecture</span>
+          <span class="tag">AI</span>
+        </div>
+        <a href="https://github.com/Darsh-Nandu/AI-System-Design" target="_blank" rel="noopener" class="cmd-link">$ open ./ai-system-design →</a>
+      </div>
+    </article>
+
+    <article class="release reveal">
+      <div class="release-head">
+        <span class="version-tag">cli</span>
+        <h3 class="release-title">groq-cli-agent</h3>
+        <span class="release-date">TypeScript</span>
+      </div>
+      <p class="release-desc">A TypeScript CLI AI agent powered by Groq that interacts with the filesystem using natural language commands.</p>
+      <ul class="diff-list">
+        <li class="add">Added natural language filesystem interaction via Groq</li>
+        <li class="add">Added TypeScript CLI interface with rich terminal output</li>
+      </ul>
+      <div class="release-footer">
+        <div class="tags">
+          <span class="tag">TypeScript</span>
+          <span class="tag">Groq</span>
+          <span class="tag">CLI</span>
+        </div>
+        <a href="https://github.com/Darsh-Nandu/groq-cli-agent" target="_blank" rel="noopener" class="cmd-link">$ open ./groq-cli-agent →</a>
+      </div>
+    </article>
+
+    <article class="release reveal">
+      <div class="release-head">
+        <span class="version-tag">backend</span>
+        <h3 class="release-title">ts-auth-jwt</h3>
+        <span class="release-date">TypeScript</span>
+      </div>
+      <p class="release-desc">A TypeScript REST API with JWT authentication and role-based authorization using Express, bcrypt, and jsonwebtoken.</p>
+      <ul class="diff-list">
+        <li class="add">Added JWT authentication with role-based access control</li>
+        <li class="add">Added bcrypt password hashing and secure token refresh flow</li>
+        <li class="add">Added 401 vs 403 middleware distinction for auth errors</li>
+      </ul>
+      <div class="release-footer">
+        <div class="tags">
+          <span class="tag">TypeScript</span>
+          <span class="tag">Express</span>
+          <span class="tag">JWT</span>
+          <span class="tag">PostgreSQL</span>
+        </div>
+        <a href="https://github.com/Darsh-Nandu/ts-auth-jwt" target="_blank" rel="noopener" class="cmd-link">$ open ./ts-auth-jwt →</a>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="section" id="about">
+  <div class="container about-grid">
+    <div class="reveal">
+      <p class="path-label">~/about.md</p>
+      <h2 class="section-title">About</h2>
+      <p>I'm a second-year B.Tech student in Data Science & AI at IIT Bhilai. I got into AI by wanting to understand how language models actually work under the hood — not just call APIs, but really understand the internals. That curiosity has stuck.</p>
+      <p>These days I split my time between research (NLP, mechanistic interpretability) and building systems — agents, RAG pipelines, inference platforms, Android apps. I like building things from scratch because that's the fastest way to actually learn them.</p>
+      <p>Outside of code I'm usually reading about how the brain works, or finding ways to apply those ideas to make AI systems smarter.</p>
+    </div>
+    <div class="now-card reveal">
+      <p class="path-label">// currently</p>
+      <ul>
+        <li>Undergraduate researcher @ IIT Bhilai</li>
+        <li>Building an AST-based Python chunking library for coding agents</li>
+        <li>Studying LLM internals: MoE, FlashAttention, MLA</li>
+        <li>Learning Reasoning models, World models &amp; AI Agents</li>
+        <li>Future: AI × Cybersecurity &amp; Quantum computing</li>
+        <li>Open to research collabs &amp; internships</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- DEPENDENCIES -->
+<section class="section" id="stack">
+  <div class="container">
+    <p class="path-label reveal">~/requirements.txt</p>
+    <h2 class="section-title reveal">Dependencies</h2>
+    <p class="section-intro reveal">What I actually use — from model training to deployment. A few things I've happily moved on from.</p>
+    <pre class="code-block reveal"><span class="tok-punc">{</span>
+  <span class="tok-key">"languages"</span><span class="tok-punc">:</span> <span class="tok-punc">{</span>
+    <span class="indent"><span class="tok-key">"python"</span><span class="tok-punc">:</span> <span class="tok-string">"^3.11.0"</span>,</span>
+    <span class="indent"><span class="tok-key">"typescript"</span><span class="tok-punc">:</span> <span class="tok-string">"^5.4.0"</span></span>
+  <span class="tok-punc">},</span>
+  <span class="tok-key">"ai_ml"</span><span class="tok-punc">:</span> <span class="tok-punc">{</span>
+    <span class="indent"><span class="tok-key">"pytorch"</span><span class="tok-punc">:</span> <span class="tok-string">"^2.3.0"</span>,</span>
+    <span class="indent"><span class="tok-key">"langchain"</span><span class="tok-punc">:</span> <span class="tok-string">"^0.2.0"</span>,</span>
+    <span class="indent"><span class="tok-key">"langgraph"</span><span class="tok-punc">:</span> <span class="tok-string">"^0.1.0"</span>,</span>
+    <span class="indent"><span class="tok-key">"huggingface_hub"</span><span class="tok-punc">:</span> <span class="tok-string">"^0.23.0"</span>,</span>
+    <span class="indent"><span class="tok-key">"groq"</span><span class="tok-punc">:</span> <span class="tok-string">"^0.9.0"</span>,</span>
+    <span class="indent"><span class="tok-key">"ollama"</span><span class="tok-punc">:</span> <span class="tok-string">"^0.2.0"</span></span>
+  <span class="tok-punc">},</span>
+  <span class="tok-key">"backend_infra"</span><span class="tok-punc">:</span> <span class="tok-punc">{</span>
+    <span class="indent"><span class="tok-key">"fastapi"</span><span class="tok-punc">:</span> <span class="tok-string">"^0.111.0"</span>,</span>
+    <span class="indent"><span class="tok-key">"node"</span><span class="tok-punc">:</span> <span class="tok-string">"^20.0.0"</span>,</span>
+    <span class="indent"><span class="tok-key">"docker"</span><span class="tok-punc">:</span> <span class="tok-string">"^26.0.0"</span>,</span>
+    <span class="indent"><span class="tok-key">"postgresql"</span><span class="tok-punc">:</span> <span class="tok-string">"^16.0.0"</span>,</span>
+    <span class="indent"><span class="tok-key">"redis"</span><span class="tok-punc">:</span> <span class="tok-string">"^7.0.0"</span>,</span>
+    <span class="indent"><span class="tok-key">"qdrant"</span><span class="tok-punc">:</span> <span class="tok-string">"^1.9.0"</span></span>
+  <span class="tok-punc">},</span>
+  <span class="tok-key">"devDependencies"</span><span class="tok-punc">:</span> <span class="tok-punc">{</span>
+    <span class="indent"><span class="tok-key">"curiosity"</span><span class="tok-punc">:</span> <span class="tok-string">"^∞.0.0"</span>,</span>
+    <span class="indent"><span class="tok-key">"first-principles-thinking"</span><span class="tok-punc">:</span> <span class="tok-string">"^1.0.0"</span></span>
+  <span class="tok-punc">},</span>
+  <span class="tok-comment">// retired, no hard feelings</span>
+  <span class="tok-key">"deprecated"</span><span class="tok-punc">:</span> <span class="tok-punc">[</span>
+    <span class="indent"><span class="tok-dep-rem">"black-box-thinking"</span>,</span>
+    <span class="indent"><span class="tok-dep-rem">"tutorial-hell"</span></span>
+  <span class="tok-punc">]</span>
+<span class="tok-punc">}</span></pre>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="section" id="contact">
+  <div class="container">
+    <p class="path-label reveal">~/contact.sh</p>
+    <h2 class="section-title reveal">Get in touch</h2>
+    <div class="terminal reveal" id="terminal">
+      <div class="terminal-line"><span class="prompt">$</span> <span id="typed-cmd"></span><span class="cursor" aria-hidden="true"></span></div>
+      <div class="terminal-output" id="terminal-output">
+        <div class="out-line"><span class="out-key">email</span><a href="mailto:nandurdarsh@gmail.com">nandurdarsh@gmail.com</a></div>
+        <div class="out-line"><span class="out-key">github</span><a href="https://github.com/Darsh-Nandu" target="_blank" rel="noopener">github.com/Darsh-Nandu</a></div>
+        <div class="out-line"><span class="out-key">linkedin</span><a href="https://www.linkedin.com/in/darsh-nandu-072a39373" target="_blank" rel="noopener">linkedin.com/in/darsh-nandu</a></div>
+        <span class="out-line out-status">Status: open to opportunities · avg. reply time &lt; 24h</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <span>Built with HTML, CSS &amp; a lot of coffee.</span>
+    <span>© 2026 Darsh Nandu</span>
+  </div>
+</footer>
+
+<script>
+  // ---- BOOT SEQUENCE ----
+  (function(){
+    var boot = document.getElementById('boot');
+    var lines = boot.querySelectorAll('.boot-line');
+    var delay = 120;
+    lines.forEach(function(line, i){
+      setTimeout(function(){ line.classList.add('show'); }, delay * i + 80);
+    });
+    setTimeout(function(){ boot.classList.add('hidden'); }, delay * lines.length + 420);
+  })();
+
+  // ---- TAB NAV + SCROLLSPY ----
+  (function(){
+    var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab'));
+    var cmdBtns = Array.prototype.slice.call(document.querySelectorAll('.cmd-btn'));
+    var sections = tabs.map(function(t){ return document.getElementById(t.dataset.target); });
+    var tabbar = document.querySelector('.tabbar');
+
+    function scrollToTarget(id){
+      var el = document.getElementById(id);
+      if(el) el.scrollIntoView({ behavior:'smooth', block:'start' });
+    }
+
+    // Keep the active tab visible within the tab bar without affecting page scroll
+    function revealTab(tab){
+      var tabLeft = tab.offsetLeft;
+      var tabRight = tabLeft + tab.offsetWidth;
+      var viewLeft = tabbar.scrollLeft;
+      var viewRight = viewLeft + tabbar.clientWidth;
+      if(tabLeft < viewLeft){
+        tabbar.scrollTo({ left: Math.max(0, tabLeft - 16), behavior:'smooth' });
+      } else if(tabRight > viewRight){
+        tabbar.scrollTo({ left: tabRight - tabbar.clientWidth + 16, behavior:'smooth' });
+      }
+    }
+
+    tabs.forEach(function(tab){
+      tab.addEventListener('click', function(){ scrollToTarget(tab.dataset.target); });
+    });
+    cmdBtns.forEach(function(btn){
+      btn.addEventListener('click', function(){ scrollToTarget(btn.dataset.target); });
+    });
+
+    var observer = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          var id = entry.target.id;
+          tabs.forEach(function(tab){
+            var isActive = tab.dataset.target === id;
+            tab.classList.toggle('active', isActive);
+            if(isActive) revealTab(tab);
+          });
+        }
+      });
+    }, { rootMargin: '-40% 0px -55% 0px', threshold: 0 });
+
+    sections.forEach(function(s){ if(s) observer.observe(s); });
+  })();
+
+  // ---- LIVE CLOCK ----
+  (function(){
+    var clock = document.getElementById('clock');
+    function tick(){
+      var d = new Date();
+      var h = String(d.getHours()).padStart(2,'0');
+      var m = String(d.getMinutes()).padStart(2,'0');
+      clock.textContent = h + ':' + m;
+    }
+    tick();
+    setInterval(tick, 1000 * 30);
+  })();
+
+  // ---- SCROLL REVEAL ----
+  (function(){
+    var items = document.querySelectorAll('.reveal');
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          entry.target.classList.add('visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    items.forEach(function(item){ io.observe(item); });
+  })();
+
+  // ---- TERMINAL TYPING ----
+  (function(){
+    var typedEl = document.getElementById('typed-cmd');
+    var outputLines = document.querySelectorAll('#terminal-output .out-line');
+    var command = './contact.sh';
+    var started = false;
+
+    function typeCommand(){
+      var i = 0;
+      var iv = setInterval(function(){
+        typedEl.textContent = command.slice(0, ++i);
+        if(i >= command.length){
+          clearInterval(iv);
+          outputLines.forEach(function(line, idx){
+            setTimeout(function(){ line.classList.add('show'); }, 200 + idx * 140);
+          });
+        }
+      }, 55);
+    }
+
+    var terminal = document.getElementById('terminal');
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting && !started){
+          started = true;
+          typeCommand();
+          io.disconnect();
+        }
+      });
+    }, { threshold: 0.4 });
+    io.observe(terminal);
+
+    // reduced motion: show everything immediately
+    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      typedEl.textContent = command;
+      outputLines.forEach(function(line){ line.classList.add('show'); });
+      started = true;
+      io.disconnect();
+    }
+  })();
+  // ---- CUSTOM CURSOR + AMBIENT GLOW ----
+  (function(){
+    var arrow = document.getElementById('cursor-arrow');
+    var glow  = document.getElementById('glow');
+
+    document.addEventListener('mousemove', function(e){
+      arrow.style.left = e.clientX + 'px';
+      arrow.style.top  = e.clientY + 'px';
+      glow.style.left  = e.clientX + 'px';
+      glow.style.top   = e.clientY + 'px';
+    });
+
+    var interactives = 'a, button, [role="button"], input, textarea, select, .cmd-link, .tab';
+    document.addEventListener('mouseover', function(e){
+      if(e.target.closest(interactives)) document.body.classList.add('cursor-hover');
+    });
+    document.addEventListener('mouseout', function(e){
+      if(e.target.closest(interactives)) document.body.classList.remove('cursor-hover');
+    });
+
+    document.addEventListener('mousedown', function(){ document.body.classList.add('cursor-click'); });
+    document.addEventListener('mouseup',   function(){ document.body.classList.remove('cursor-click'); });
+  })();
+</script>
+</body>
+</html>
